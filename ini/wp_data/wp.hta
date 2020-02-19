@@ -1,0 +1,62 @@
+<IfModule mod_rewrite.c>
+RewriteEngine On
+RewriteCond %{HTTP:X-Forwarded-Proto} !https [NC]
+RewriteCond %{HTTP_HOST} ^[^.]+\.[^.]+$ [NC]
+RewriteCond %{HTTPS} off [NC]
+RewriteCond %{SERVER_PORT} !^443 [NC]
+RewriteRule (.*) https://%{HTTP_HOST}%{REQUEST_URI} [R=301,L]
+</IfModule>
+
+# remove the ga and fa
+<IfModule mod_rewrite.c>
+RewriteEngine On 
+RewriteCond %{QUERY_STRING} ^(.*)&?fbclid=(.*)$ [NC]
+RewriteRule ^/?(.*)$ /$1?%1 [R=301,L]
+RewriteBase /
+</IfModule>
+
+<IfModule mod_deflate.c>
+# Remove browser bugs (only needed for really old browsers)
+BrowserMatch ^Mozilla/4 gzip-only-text/html
+BrowserMatch ^Mozilla/4\.0[678] no-gzip
+BrowserMatch \bMSIE !no-gzip !gzip-only-text/html
+Header append Vary User-Agent
+</IfModule>
+
+<IfModule mod_rewrite.c>
+# Block the include-only files.
+RewriteEngine On
+RewriteBase /
+RewriteRule ^yannyann_wp_admin_droot/wp-admin/includes/ - [F,L]
+RewriteRule !^yannyann_wp_admin_droot/wp-includes/ - [S=3]
+RewriteRule ^yannyann_wp_admin_droot/wp-includes/[^/]+\.php$ - [F,L]
+RewriteRule ^yannyann_wp_admin_droot/wp-includes/js/tinymce/langs/.+\.php - [F,L]
+RewriteRule ^yannyann_wp_admin_droot/wp-includes/theme-compat/ - [F,L]
+</IfModule>
+
+<IfModule mod_rewrite.c>
+# Block the include-only files.
+RewriteEngine On
+
+#hide documents
+Options -Indexes
+
+#this section should put at the bottom of all rewrite rules or may lead to some mistakes
+RewriteBase /
+RewriteRule ^index\.php$ - [L]
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule . /index.php [L]
+</IfModule>
+
+<Files .htaccess>
+#protect .htaccess file
+order allow,deny
+deny from all
+</Files>
+
+#protect wp-cofig.php file
+<files yannyann_wp_admin_slash_drootwp-config.php>
+order allow,deny
+deny from all
+</files>

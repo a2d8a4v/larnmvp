@@ -1,0 +1,242 @@
+
+//**insert_www_or_nonwww_yannyann*//
+
+server {
+    #listen 443 ssl http2 default_server fastopen=3 reuseport;
+    #listen [::]:443 ssl http2 default_server ipv6only=on;
+    listen 443 ssl http2 fastopen=3 reuseport;
+    server_name yannyann_web_domain;
+    root yannyann_web_base_droot/yannyann_web_drootyannyann_slash_wp_admin_droot;
+    # do not need to type port in url
+    port_in_redirect off;
+
+    # Add index.php to the list if you are using PHP
+    # index index.php index.html index.htm index.nginx-debian.html;
+
+    ssl_certificate /etc/nginx/ssl/nginx.crt;
+    ssl_certificate_key /etc/nginx/ssl/nginx.key;
+    //**insert_yannyann*//
+    # ssl_dhparam /etc/nginx/ssl/dhparams.pem;
+    
+    # SSLv3 is removed for security issues
+    ssl_protocols TLSv1 TLSv1.1 TLSv1.2 TLSv1.3;
+    ssl_ciphers '[ECDHE-ECDSA-AES128-GCM-SHA256|ECDHE-ECDSA-CHACHA20-POLY1305]:[ECDHE-RSA-AES128-GCM-SHA256|ECDHE-RSA-CHACHA20-POLY1305]:ECDHE-ECDSA-AES128-SHA256:ECDHE-ECDSA-AES128-SHA:ECDHE-RSA-AES128-SHA256:ECDHE-RSA-AES128-SHA:AES128-SHA:[TLS13+AESGCM+AES128|TLS13+AESGCM+AES256|TLS13+CHACHA20]:[EECDH+ECDSA+AESGCM+AES128|EECDH+ECDSA+CHACHA20]:EECDH+ECDSA+AESGCM+AES256:EECDH+ECDSA+AES128+SHA:EECDH+ECDSA+AES256+SHA:[EECDH+aRSA+AESGCM+AES128|EECDH+aRSA+CHACHA20]:EECDH+aRSA+AESGCM+AES256:EECDH+aRSA+AES128+SHA:EECDH+aRSA+AES256+SHA:RSA+AES128+SHA:RSA+AES256+SHA:RSA+3DES:[TLS13-AES-128-GCM-SHA256|TLS13-CHACHA20-POLY1305-SHA256]:TLS13-AES-256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384';
+    ssl_ecdh_curve X25519:P-256:P-384;
+    ssl_prefer_server_ciphers on;
+
+    add_header Strict-Transport-Security "max-age=63072000; includeSubDomains; preload";
+    add_header X-Content-Type-Options nosniff;
+
+    #prevent somebody showing my website by iframe
+    add_header X-Frame-Options "SAMEORIGIN";
+    add_header X-XSS-Protection "1; mode=block";
+
+    #content policies
+    add_header Referrer-Policy "no-referrer, strict-origin-when-cross-origin";
+    add_header Content-Security-Policy "default-src * data: 'unsafe-eval' 'unsafe-inline'" always;
+
+    resolver 1.1.1.1 1.0.0.1 8.8.8.8 8.8.4.4 9.9.9.9 74.82.42.42 66.220.18.42 8.26.56.26 8.20.247.20 64.6.64.6 64.6.65.6 156.154.70.1 156.154.71.1 216.146.36.36 216.146.35.35 209.244.0.3 209.244.0.4 23.253.163.53 198.101.242.72 203.80.96.10 202.45.84.58 202.14.67.4 202.14.67.14 208.67.222.222 208.67.220.220 168.95.1.1 168.95.192.1 139.175.252.16 139.175.55.244 101.101.101.101 101.102.103.104 168.126.63.1 168.126.63.2 210.220.163.82 219.250.36.130 164.124.101.2 203.248.252.2 164.124.107.9 203.248.242.2 77.88.8.8 77.88.8.1 195.46.39.39 195.46.39.40 84.200.69.80 84.200.70.40 77.109.148.136 77.109.148.137 91.239.100.100 89.233.43.71 80.80.80.80 80.80.81.81 valid=300s;
+    resolver_timeout 5s;
+
+    ssl_session_cache shared:SSL:60m;
+    ssl_session_timeout 1m;
+
+    location / {
+        # @https://imququ.com/post/x-forwarded-for-header-in-http.html
+        # Pass the request on to Varnish
+        #proxy_pass http://127.0.0.1:yannyann_varnish_port;
+        proxy_pass http://backend_yannyann_web_droot;
+
+        # HTTP 1.1 support
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection $connection_upgrade;
+
+        # Pass some headers to the downstream server, so it can identify the host
+        # You should set some headers here, or varnish server cannot identify the https rewrite
+        # Add headers to recognize SSL
+        # @https://www.jianshu.com/p/cc5167032525
+        proxy_set_header Host $host;
+        proxy_set_header X-Forwarded-Port 443;
+        proxy_set_header X-Forwarded-Ssl $proxy_x_forwarded_ssl;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Real-PORT $remote_port;
+        proxy_set_header HTTPS "on";
+
+        # Tell any web apps like WordPress that the session is HTTPS.
+        proxy_set_header X-Forwarded-Proto https;
+        
+        proxy_redirect off;
+        add_header Strict-Transport-Security "max-age=63072000; includeSubdomains; preload";
+
+        proxy_connect_timeout      90;
+        proxy_send_timeout         90;
+        proxy_read_timeout         90;
+        proxy_buffer_size          4k;
+        proxy_buffers              4 32k;
+        proxy_busy_buffers_size    64k;
+        proxy_temp_file_write_size 64k;
+
+        # Mitigate httpoxy attack avoid
+        proxy_set_header Proxy "";
+
+        # log path
+        proxy_temp_path  /etc/nginx/proxy_temp;
+        access_log yannyann_web_base_droot/yannyann_web_droot/log/nginx/access.log;
+        error_log  yannyann_web_base_droot/yannyann_web_droot/log/nginx/error.log notice;
+    }
+
+    location ~ ^yannyann_wp_admin_droot/ {
+        # Pass the request on to Varnish
+        #proxy_pass http://127.0.0.1:yannyann_varnish_port;
+        proxy_pass http://backend_yannyann_web_droot;
+
+        # HTTP 1.1 support
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection $connection_upgrade;
+
+        # Pass some headers to the downstream server, so it can identify the host
+        # You should set some headers here, or varnish server cannot identify the https rewrite
+        # Add headers to recognize SSL
+        proxy_set_header Host $host;
+        proxy_set_header X-Forwarded-Port 443;
+        proxy_set_header X-Forwarded-Ssl $proxy_x_forwarded_ssl;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Real-PORT $remote_port;
+        proxy_set_header HTTPS "on";
+
+        # Mitigate httpoxy attack avoid
+        proxy_set_header Proxy "";
+
+        # Tell any web apps like WordPress that the session is HTTPS.
+        proxy_set_header X-Forwarded-Proto https;
+        
+        # other which I do not understand
+        proxy_set_header Accept-Encoding "";
+        proxy_next_upstream error timeout invalid_header http_500 http_502 http_503 http_504;
+        add_header Front-End-Https on;
+        proxy_redirect off;
+    }
+
+    location ~ ^yannyann_wp_admin_droot/wp-login.php {
+        # Pass the request on to Varnish
+        #proxy_pass http://127.0.0.1:yannyann_varnish_port;
+        proxy_pass http://backend_yannyann_web_droot;
+
+        # HTTP 1.1 support
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection $connection_upgrade;
+
+        # Pass some headers to the downstream server, so it can identify the host
+        # You should set some headers here, or varnish server cannot identify the https rewrite
+        # Add headers to recognize SSL
+        proxy_set_header Host $host;
+        proxy_set_header X-Forwarded-Port 443;
+        proxy_set_header X-Forwarded-Ssl $proxy_x_forwarded_ssl;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Real-PORT $remote_port;
+        proxy_set_header HTTPS "on";
+
+        # Mitigate httpoxy attack avoid
+        proxy_set_header Proxy "";
+
+        # Tell any web apps like WordPress that the session is HTTPS.
+        proxy_set_header X-Forwarded-Proto https;
+        
+        # other which I do not understand
+        proxy_set_header Accept-Encoding "";
+        proxy_next_upstream error timeout invalid_header http_500 http_502 http_503 http_504;
+        add_header Front-End-Https on;
+        proxy_redirect off;
+    }
+
+    location ~ ^yannyann_wp_admin_droot/wp-admin {
+        # Pass the request on to Varnish
+        #proxy_pass http://127.0.0.1:yannyann_varnish_port;
+        proxy_pass http://backend_yannyann_web_droot;
+
+        # HTTP 1.1 support
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection $connection_upgrade;
+
+        # Pass some headers to the downstream server, so it can identify the host
+        # You should set some headers here, or varnish server cannot identify the https rewrite
+        # Add headers to recognize SSL
+        proxy_set_header Host $host;
+        proxy_set_header X-Forwarded-Port 443;
+        proxy_set_header X-Forwarded-Ssl $proxy_x_forwarded_ssl;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Real-PORT $remote_port;
+        proxy_set_header HTTPS "on";
+
+        # Mitigate httpoxy attack avoid
+        proxy_set_header Proxy "";
+
+        # Tell any web apps like WordPress that the session is HTTPS.
+        proxy_set_header X-Forwarded-Proto https;
+        
+        # other which I do not understand
+        proxy_set_header Accept-Encoding "";
+        proxy_next_upstream error timeout invalid_header http_500 http_502 http_503 http_504;
+        add_header Front-End-Https on;
+        proxy_redirect off;
+    }
+
+    location ~* \.(eot|ttf|woff|woff2)$ {
+        add_header Access-Control-Allow-Origin *;
+    }
+
+    #for autherize the ssl CA
+    location ^~ /.well-known {
+        try_files $uri =404;
+        allow all;
+        root yannyann_web_base_droot/yannyann_web_droot;
+    }
+
+    # @https://segmentfault.com/a/1190000009374437
+    # text/html is read by default so do not need to specific it @https://stackoverflow.com/questions/6475472/duplicate-mime-type-text-html
+    brotli on;
+    brotli_buffers 32 8k;
+    brotli_window 512k;
+    brotli_min_length 20;
+    brotli_comp_level 6;
+    brotli_static on;
+    brotli_types application/javascript application/rss+xml application/vnd.ms-fontobject application/x-font application/x-font-opentype application/x-font-otf application/x-font-truetype application/x-font-ttf application/x-javascript application/xhtml+xml application/xml application/xml+rss application/json font/opentype font/otf font/ttf font/eot font/woff font/woff2 image/svg+xml image/x-icon text/css text/javascript text/plain text/xml text/js text/txt;
+
+    gzip on;
+    gzip_vary on;
+    gzip_proxied any;
+    gzip_comp_level 6;
+    gzip_buffers 16 8k;
+    gzip_min_length 1024;
+    gzip_types application/javascript application/rss+xml application/vnd.ms-fontobject application/x-font application/x-font-opentype application/x-font-otf application/x-font-truetype application/x-font-ttf application/x-javascript application/xhtml+xml application/xml application/xml+rss application/json font/opentype font/otf font/ttf font/eot font/woff font/woff2 image/svg+xml image/x-icon text/css text/javascript text/plain text/xml image/jpg image/jpeg image/png text/js text/txt;
+    gzip_disable "MSIE [1-6]\.";
+
+
+    location ~ \.php$ {
+        http2_push_preload on;
+        include snippets/fastcgi-php.conf;
+        fastcgi_param HTTPS on;
+        fastcgi_buffers 256 4k;
+        fastcgi_intercept_errors on;
+        fastcgi_read_timeout 14400;
+        fastcgi_param SCRIPT_FILENAME yannyann_web_base_droot/yannyann_web_drootyannyann_slash_wp_admin_droot$fastcgi_script_name;
+        if ($uri !~ "^/uploads/") {
+            fastcgi_pass unix:/run/php/phpyannyann_php_version2or3-fpm.sock;
+        }
+    }
+}
+
+upstream backend_yannyann_web_droot {
+    #server 127.0.0.1:yannyann_varnish_port max_fails=1000 fail_timeout=120s;
+    #server 127.0.0.1:6081 max_fails=3 fail_timeout=30s;
+    server 127.0.0.1:yannyann_varnish_port;
+    server 127.0.0.1:8080 backup;
+}

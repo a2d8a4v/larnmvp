@@ -1,0 +1,135 @@
+yannyann_web_domain {
+  root yannyann_web_base_droot/yannyann_web_drootyannyann_slash_wp_admin_droot
+
+  tls yannyann_email {
+    # Android 4 and IE 8-10 only support TLS 1.0.
+    # Change tls1.0 to tls1.1 (or remove this block entirely) for better privacy.
+    protocols tls1.1 tls1.2 tls1.3
+    # @https://github.com/mholt/caddy/issues/53
+    # @https://caddyserver.com/docs/tls
+    ciphers ECDHE-ECDSA-AES256-GCM-SHA384 ECDHE-RSA-AES256-GCM-SHA384 ECDHE-ECDSA-AES128-GCM-SHA256 ECDHE-RSA-AES128-GCM-SHA256 ECDHE-ECDSA-WITH-CHACHA20-POLY1305 ECDHE-RSA-WITH-CHACHA20-POLY1305 ECDHE-RSA-AES256-CBC-SHA ECDHE-RSA-AES128-CBC-SHA ECDHE-ECDSA-AES256-CBC-SHA ECDHE-ECDSA-AES128-CBC-SHA RSA-AES256-CBC-SHA RSA-AES128-CBC-SHA ECDHE-RSA-3DES-EDE-CBC-SHA RSA-3DES-EDE-CBC-SHA
+    key_type rsa8192
+    curves X25519 p256 p384 p521
+    must_staple
+    alpn h2 http/1.1
+  }
+
+  header / {
+    # @https://caddyserver.com/docs/header
+    # Enable HTTP Strict Transport Security (HSTS) to force clients to always
+    # connect via HTTPS (do not use if only testing)
+    Strict-Transport-Security "max-age=63072000; includeSubDomains; preload"
+    # Enable cross-site filter (XSS) and tell browser to block detected attacks
+    X-XSS-Protection "1; mode=block"
+    # Prevent some browsers from MIME-sniffing a response away from the declared Content-Type
+    X-Content-Type-Options "nosniff"
+    # Disallow the site to be rendered within a frame (clickjacking protection)
+    X-Frame-Options "SAMEORIGIN"
+    Referrer-Policy "no-referrer, strict-origin-when-cross-origin"
+    Content-Security-Policy "default-src * data: 'unsafe-eval' 'unsafe-inline' always"
+  }
+
+  gzip {
+    # @https://caddyserver.com/docs/gzip
+    ext *
+    # not # "not to gzipped paths"
+    level 6
+    min_length 1024
+  }
+
+  # fastcgi / /run/php/phpyannyann_php_version2or3-fpm.sock php {
+  #   root yannyann_web_base_droot/yannyann_web_drootyannyann_slash_wp_admin_droot
+  # }
+
+  log / yannyann_web_base_droot/yannyann_web_droot/log/caddy/access.log "{combined}" {
+    rotate_size 100 # rotate after 100 MB
+    rotate_age  14  # keep log files for 14 days
+    rotate_keep 10  # keep at most 10 log files
+    rotate_compress
+  }
+
+  errors yannyann_web_base_droot/yannyann_web_droot/log/caddy/error.log {
+    # @https://caddyserver.com/docs/errors
+    # code #"path to 404 page"
+    rotate_size 100 # rotate after 100 MB
+    rotate_age  14  # keep log files for 14 days
+    rotate_keep 10  # keep at most 10 log files
+    rotate_compress
+  }
+
+  proxy / http://127.0.0.1:yannyann_varnish_port http://127.0.0.1:yannyann_apache2_portsconf {
+    header_upstream Connection {>Connection}
+    header_upstream Upgrade {>Upgrade}
+    header_upstream Host {host}
+    header_upstream X-Real-IP {remote}
+    header_upstream X-Forwarded-For {remote}
+    header_upstream X-Forwarded-Port {server_port}
+    header_upstream X-Forwarded-Proto {scheme}
+    max_fails 3
+    fail_timeout 5s
+    try_duration 3s
+    policy first
+  }
+
+  ratelimit yannyann_wp_admin_droot/wp-login.php 5 7 minute
+
+  # Protect secrets against misconfiguration.
+  internal yannyann_wp_admin_droot/wp-config.php
+  # Disable XML-RPC (assuming you're not using it).
+  # internal yannyann_wp_admin_droot/xmlrpc.php
+  # Protect .htaccess
+  internal yannyann_wp_admin_droot/.htaccess
+  # Protect readme.html
+  internal yannyann_wp_admin_droot/readme.html
+  # Protect license.txt
+  internal yannyann_wp_admin_droot/license.txt
+  # Protect wp-config-sample.php
+  internal yannyann_wp_admin_droot/wp-config-sample.php
+
+  basicauth yannyann_caddy_name yannyann_caddy_passwd {
+    realm "YannYann"
+    # /phpmyadmin
+    yannyann_wp_admin_droot/.htaccess
+  }
+
+  status 404 {
+    yannyann_wp_admin_droot/.login
+    yannyann_wp_admin_droot/log
+    yannyann_wp_admin_droot/.htaccess
+    yannyann_wp_admin_droot/wp-config.php
+    yannyann_wp_admin_droot/license.txt
+    yannyann_wp_admin_droot/readme.html
+    yannyann_wp_admin_droot/wp-config-sample.php
+  }
+
+  # ipfilter yannyann_wp_admin_droot/wp-admin yannyann_wp_admin_droot/wp-login.php {
+  # rule allow
+  #   ip 1:2:3:4::/56
+  #   strict
+  # }
+
+  # ipfilter yannyann_wp_admin_droot/wp-admin/admin-ajax.php {
+  #   rule block # disallow nobody === allow everybody
+  # }
+
+  #   rewrite {
+  #     if {path} not_match ^yannyann_wp_admin_droot/wp-admin
+  #     to {path} {path}/ /index.php?_url={uri}
+  #   }
+
+  #   filter rule {
+  #     content_type (?:text|javascript)
+  #     search_pattern https?://(?:www\.)?yannyann_domain_middle\.(?:yannyann_domain_last)
+  #     replacement https://yannyann_web_domain
+  #   }
+
+  #   # Set caching directives for static content. Caddy will automatically add
+  #   # Last-Modified and ETag headers for files on disk. Neat!
+  #   header yannyann_wp_admin_droot/wp-content Cache-Control "max-age=2592000, s-maxage=86400"
+  #   header yannyann_wp_admin_droot/wp-includes Cache-Control "max-age=2592000, s-maxage=86400"
+    
+  #   # XML-RPC is disabled, so delete the header that points to it.
+  #   header / -X-Pingback
+
+  on shutdown service caddy start
+}

@@ -1,0 +1,34 @@
+# robots.txt for https://yannyann_web_domain/
+
+User-agent: *
+Disallow: /admin/wp-admin/
+Disallow: /admin/wp-includes/
+Disallow: /admin/wp-content/plugins/
+Disallow: /admin/wp-content/themes/
+
+User-agent: Googlebot
+Allow: /admin/*.js*
+Allow: /admin/*.css*
+Allow: /admin/wp-content/*.js*
+Allow: /admin/wp-content/*.css*
+Allow: /admin/wp-includes/*.js*
+Allow: /admin/wp-includes/*.css*
+Allow: /admin/wp-content/plugins/*.css*
+Allow: /admin/wp-content/plugins/*.js*
+Allow: /admin/wp-content/plugins/*ajax*
+Allow: /admin/wp-content/themes/*.css*
+Allow: /admin/wp-content/themes/*.js*
+Allow: /admin/wp-content/themes/*ajax*
+Allow: /admin/wp-content/plugins/*/images/
+Allow: /admin/wp-content/uploads/
+Allow: /admin/wp-content/fonts/*.ttf*
+Allow: /admin/wp-content/fonts/*.woff*
+Allow: /admin/wp-content/fonts/*.woff2*
+Disallow: /admin/xmlrpc.php
+Disallow: /admin/wp-admin/
+Disallow: /admin/wp-includes/
+Disallow: /admin/wp-content/plugins/
+Disallow: /admin/wp-content/themes/
+Disallow: /admin/wp-content/
+
+Sitemap: https://yannyann_web_domain/sitemap_index.xml

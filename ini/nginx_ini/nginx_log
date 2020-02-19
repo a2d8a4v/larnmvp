@@ -1,0 +1,15 @@
+yannyann_web_base_droot/yannyann_web_droot/log/nginx/*.log {
+    daily
+    missingok
+    dateext
+    rotate 10
+    compress
+    delaycompress
+    notifempty
+    sharedscripts
+    postrotate
+        if [ -f /usr/local/nginx/logs/nginx.pid ]; then 
+            kill -USR1 `cat /usr/local/nginx/logs/nginx.pid`
+        fi
+    endscript
+}
