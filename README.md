@@ -30,7 +30,6 @@ Article -> [用 Varnish Nginx 和 Apache 製作 HTTP2 反向代理伺服器 | Wo
 10. 採用 BoringSSL, Redis 5.0.7, Nginx 1.17.8, Varnish 6.3.2 , Apache 2.4.41, MariaDB 10.4, WordPress 5.3.2, PHP 7.4
 11. 預設啟用 SFTP 帳戶，已帳號密碼做驗證，暫時不使用密鑰登入。
 12. 預設刪除 Ubuntu 帳戶，預設關閉 root 透過 ssh 登入的功能，預設建立別的隨機名稱的帳戶進行管理。
-13. 預設會把資訊傳回給 Bigdata-mkt 主機相關資訊，資料演算法加密過後再透過加密方式傳送到 Bigdata-mkt 主機當中。
 
 ## 支援的作業系統（OS system）
 
