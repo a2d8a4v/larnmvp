@@ -1,12 +1,5 @@
 #!/bin/bash
 
-#########################################################################################################################
-## Version : 0.0.7-1
-## Developer : Yannyann (https://github.com/a2d8a4v)
-## Website : https://www.yannyann.com
-## License : MIT License
-#########################################################################################################################
-
 function install_from_google {
 	## -- setting for arguments
 	check_point
@@ -34,7 +27,7 @@ function install_from_source {
 	check_point
 	NGINX_INSTALL="nginx_install"
 	OPEN_BORING_SSL_DIR="ob_ssl"
-	mkdir ${dir}/${NGINX_INSTALL} && cd ${dir}/${NGINX_INSTALL}
+	mkdir -pv ${dir}/${NGINX_INSTALL} && cd ${dir}/${NGINX_INSTALL}
 
 	## -- install boringssl or openssl
 	if [[ ${NGINX_FROM} == "nginx" ]];then
@@ -72,22 +65,25 @@ function install_from_source {
 	cd ${dir}/${NGINX_INSTALL}
 
 	## -- zlib
-	git clone https://github.com/cloudflare/zlib ${dir}/${NGINX_INSTALL}/zlib
+	wget https://www.zlib.net/zlib-1.2.12.tar.gz -O ${dir}/${NGINX_INSTALL}/zlib.tar.gz
+	tar zxf ${dir}/${NGINX_INSTALL}/zlib.tar.gz --directory=${dir}/${NGINX_INSTALL} && rm -rf ${dir}/${NGINX_INSTALL}/zlib.tar.gz && mv ${dir}/${NGINX_INSTALL}/zlib* ${dir}/${NGINX_INSTALL}/zlib
+	# git clone https://github.com/cloudflare/zlib ${dir}/${NGINX_INSTALL}/zlib
 	cd ${dir}/${NGINX_INSTALL}/zlib
 	./configure
 	cd ${dir}/${NGINX_INSTALL}
 
 	## -- prce
-	wget https://ftp.pcre.org/pub/pcre/pcre-8.43.tar.gz -O ${dir}/${NGINX_INSTALL}/pcre.tar.gz
-	tar zxf ${dir}/${NGINX_INSTALL}/pcre.tar.gz --directory=${dir}/${NGINX_INSTALL} && rm -rf ${dir}/${NGINX_INSTALL}/pcre.tar.gz && mv ${dir}/${NGINX_INSTALL}/pcre*-* ${dir}/${NGINX_INSTALL}/pcre
-	cd ${dir}/${NGINX_INSTALL}/pcre
-	./configure && make -j$(nproc --all) && make install
-	mkdir -p -v ${dir}/${NGINX_INSTALL}/pcre/.libs
-	cp /usr/local/lib/libpcre.a ${dir}/${NGINX_INSTALL}/pcre/libpcre.a
-	cp /usr/local/lib/libpcre.la ${dir}/${NGINX_INSTALL}/pcre/libpcre.la
-	cp /usr/local/lib/libpcre.a ${dir}/${NGINX_INSTALL}/pcre/.libs/libpcre.a
-	cp /usr/local/lib/libpcre.la ${dir}/${NGINX_INSTALL}/pcre/.libs/libpcre.la
-	cd ${dir}/${NGINX_INSTALL}
+	## Because the ftp.pcre.org domain name is no longer supported, we use libpcre3 and libpcre3-dev instead. 
+	# wget https://ftp.pcre.org/pub/pcre/pcre-8.44.tar.gz -O ${dir}/${NGINX_INSTALL}/pcre.tar.gz
+	# tar zxf ${dir}/${NGINX_INSTALL}/pcre.tar.gz --directory=${dir}/${NGINX_INSTALL} && rm -rf ${dir}/${NGINX_INSTALL}/pcre.tar.gz && mv ${dir}/${NGINX_INSTALL}/pcre*-* ${dir}/${NGINX_INSTALL}/pcre
+	# cd ${dir}/${NGINX_INSTALL}/pcre
+	# ./configure && make -j$(nproc --all) && make install
+	# mkdir -p -v ${dir}/${NGINX_INSTALL}/pcre/.libs
+	# cp /usr/local/lib/libpcre.a ${dir}/${NGINX_INSTALL}/pcre/libpcre.a
+	# cp /usr/local/lib/libpcre.la ${dir}/${NGINX_INSTALL}/pcre/libpcre.la
+	# cp /usr/local/lib/libpcre.a ${dir}/${NGINX_INSTALL}/pcre/.libs/libpcre.a
+	# cp /usr/local/lib/libpcre.la ${dir}/${NGINX_INSTALL}/pcre/.libs/libpcre.la
+	# cd ${dir}/${NGINX_INSTALL}
 
 	## -- install libatomic_ops
 	git clone https://github.com/ivmai/libatomic_ops.git ${dir}/${NGINX_INSTALL}/libatomic_ops
@@ -122,7 +118,7 @@ function install_from_source {
 	git clone https://github.com/arut/nginx-rtmp-module.git ${dir}/${NGINX_INSTALL}/ngx-rtmp-module
 
 	## -- headers-more-nginx-module
-	git clone https://github.com/openresty/headers-more-nginx-module.git ${dir}/${NGINX_INSTALL}/headers-more-nginx-module
+	# git clone https://github.com/openresty/headers-more-nginx-module.git ${dir}/${NGINX_INSTALL}/headers-more-nginx-module
 
 	## -- ngx_http_geoip2_module
 	# @https://github.com/leev/ngx_http_geoip2_module
@@ -148,8 +144,8 @@ function install_from_source {
 	## -- install libunwind to support gperftools in 64bit computer
 	# @https://github.com/dropbox/libunwind
 	# @http://download.savannah.nongnu.org/releases/libunwind/
-	wget http://download.savannah.nongnu.org/releases/libunwind/libunwind-1.3.1.tar.gz -O ${dir}/${NGINX_INSTALL}/libunwind.tar.gz
-	# wget http://download.savannah.nongnu.org/releases/libunwind/libunwind-1.3.1.tar.gz -O ${dir}/${NGINX_INSTALL}/libunwind.tar.gz
+	wget http://download.savannah.nongnu.org/releases/libunwind/libunwind-1.5.0.tar.gz -O ${dir}/${NGINX_INSTALL}/libunwind.tar.gz
+	# wget http://download.savannah.nongnu.org/releases/libunwind/libunwind-1.4.0.tar.gz -O ${dir}/${NGINX_INSTALL}/libunwind.tar.gz
 	tar zxf ${dir}/${NGINX_INSTALL}/libunwind.tar.gz --directory=${dir}/${NGINX_INSTALL} && rm -rf ${dir}/${NGINX_INSTALL}/libunwind.tar.gz && mv ${dir}/${NGINX_INSTALL}/libunwind-* ${dir}/${NGINX_INSTALL}/libunwind
 	cd ${dir}/${NGINX_INSTALL}/libunwind
 	./configure && make -j$(nproc --all) && make install
@@ -160,7 +156,7 @@ function install_from_source {
 	# @https://v5b7.com/INBOX/nginx/nginx_with_google_perftools/nginx_with_google_perftools.html
 	# @https://www.jb51.net/article/34016.htm
 	# @https://my.oschina.net/ambari/blog/664786
-	wget https://github.com/gperftools/gperftools/releases/download/gperftools-2.7/gperftools-2.7.tar.gz -O ${dir}/${NGINX_INSTALL}/gperftools.tar.gz
+	wget https://github.com/gperftools/gperftools/releases/download/gperftools-2.9.1/gperftools-2.9.1.tar.gz -O ${dir}/${NGINX_INSTALL}/gperftools.tar.gz
 	tar zxf ${dir}/${NGINX_INSTALL}/gperftools.tar.gz --directory=${dir}/${NGINX_INSTALL} && rm -rf ${dir}/${NGINX_INSTALL}/gperftools.tar.gz && mv ${dir}/${NGINX_INSTALL}/gperftools-* ${dir}/${NGINX_INSTALL}/gperftools
 	cd ${dir}/${NGINX_INSTALL}/gperftools
 	./configure && make -j$(nproc --all) && make install
@@ -171,23 +167,32 @@ function install_from_source {
 	ln -s /usr/local/lib/libprofiler.so.0  /usr/lib/libprofiler.so.0
 	ln -s /usr/local/lib/libunwind.so.8 /usr/lib/libunwind.so.8
 
+	## -- install for QUIC by CloudFlare quiche
+	# git clone https://github.com/cloudflare/quiche ${dir}/${NGINX_INSTALL}/quiche
+	# cd ${dir}/${NGINX_INSTALL}/quiche && git submodule update --init && cargo build --examples
+	# cd ${dir}/${NGINX_INSTALL}
+
 	## -- download and install nginx
 	wget https://nginx.org/download/nginx-${NGINX_VER}.tar.gz -O ${dir}/${NGINX_INSTALL}/nginx.tar.gz
 	tar zxf ${dir}/${NGINX_INSTALL}/nginx.tar.gz --directory=${dir}/${NGINX_INSTALL} && rm -rf ${dir}/${NGINX_INSTALL}/nginx.tar.gz && mv ${dir}/${NGINX_INSTALL}/nginx-* ${dir}/${NGINX_INSTALL}/nginx
 	cd ${dir}/${NGINX_INSTALL}/nginx
 	# SPDY, HTTP2 HPACK, Dynamic TLS Record, Fix Http2 Push Error Patch
 	# @https://github.com/kn007/patch
-	curl https://raw.githubusercontent.com/kn007/patch/d6bd9f7e345a0afc88e050a4dd991a57b7fb39be/nginx.patch | patch -p1
-	# Strict-SNI Patch
-	# Strict SNI requires at least two ssl server (fake) settings (server { listen 443 ssl }).
-	# It does not matter what kind of certificate or duplicate.
-	curl https://raw.githubusercontent.com/hakasenyang/openssl-patch/master/nginx_strict-sni_1.15.10.patch | patch -p1
-	# I/O uring for Kernel 5.1 support
-	curl https://raw.githubusercontent.com/hakasenyang/openssl-patch/master/nginx_io_uring.patch | patch -p1
+	# curl https://raw.githubusercontent.com/kn007/patch/master/nginx.patch | patch -p1
+	# curl https://raw.githubusercontent.com/kn007/patch/master/nginx_with_quic.patch | patch -p1
+	# curl https://raw.githubusercontent.com/kn007/patch/master/use_openssl_md5_sha1.patch | patch -p1
+	# curl https://raw.githubusercontent.com/kn007/patch/master/Enable_BoringSSL_OCSP.patch | patch -p1
+
+	# preprocessing for Nginx
+	if [[ -f "/usr/share/man/man8/nginx.8.gz" ]];then
+		rm -rf /usr/share/man/man8/nginx.8.gz
+	fi
+	cp ${dir}/${NGINX_INSTALL}/nginx/man/nginx.8 /usr/share/man/man8 && gzip -f /usr/share/man/man8/nginx.8
 
 	# enter in nginx install root
 	cd ${dir}/${NGINX_INSTALL}/nginx
 
+	# @https://devopscraft.com/how-to-compile-nginx-from-source-on-ubuntu-20-04/
 	# @https://moa.moe/264
 	# @https://haohetao.iteye.com/blog/2378660
 	# @https://designhost.gr/topic/799-enabling-tcp-fast-open-for-nginx-on-centos-7/
@@ -196,70 +201,74 @@ function install_from_source {
 	# @https://serverfault.com/questions/869794/nginx-with-cc-opt-and-with-ld-opt-configure-options
 	# @https://love4taylor.me/posts/nginx-tls-1-3/
 
-	./configure --prefix=/etc/nginx  \
-	            --sbin-path=/usr/sbin/nginx \
-	            --modules-path=/usr/lib64/nginx/modules \
-	            --conf-path=/etc/nginx/nginx.conf \
-	            --error-log-path=/var/log/nginx/error.log \
-	            --http-log-path=/var/log/nginx/access.log \
-	            --pid-path=/var/run/nginx.pid \
-	            --lock-path=/var/run/nginx.lock \
-	            --http-client-body-temp-path=/var/lib/nginx/body \
-	            --http-fastcgi-temp-path=/var/lib/nginx/fastcgi \
-	            --http-proxy-temp-path=/var/lib/nginx/proxy \
-	            --http-scgi-temp-path=/var/lib/nginx/scgi \
-	            --http-uwsgi-temp-path=/var/lib/nginx/uwsgi \
-	            --user=nginx \
-	            --group=nginx \
-	            --build=Yannyann.com \
-	            --with-openssl=../${OPEN_BORING_SSL_DIR} \
-	            --with-openssl-opt='enable-tls1_3 enable-ec_nistp_64_gcc_128 enable-weak-ssl-ciphers zlib -march=native -ljemalloc -Wl,-flto' \
-	            --with-mail \
-	            --with-debug \
-	            --with-compat \
-	            --with-threads \
-	            --with-libatomic \
-	            --with-zlib=../zlib \
-	            --with-pcre=../pcre \
-	            --with-pcre-jit \
-	            --with-stream \
-	            --with-poll_module \
-	            --with-select_module \
-	            --with-http_v2_module \
-	            --with-http_dav_module \
-	            --with-mail_ssl_module \
-	            --with-http_flv_module \
-	            --with-http_sub_module \
-	            --with-http_mp4_module \
-	            --with-http_dav_module \
-	            --with-http_ssl_module \
-	            --with-http_xslt_module \
-	            --with-http_slice_module \
-	            --with-stream_ssl_module \
-	            --with-http_gunzip_module \
-	            --with-http_realip_module \
-	            --with-stream_geoip_module \
-	            --with-http_addition_module \
-	            --with-stream_realip_module \
-	            --with-http_stub_status_module \
-	            --with-http_gzip_static_module \
-	            --with-http_secure_link_module \
-	            --with-http_degradation_module \
+	./configure --prefix=/etc/nginx \
+				--sbin-path=/usr/sbin/nginx \
+				--modules-path=/usr/lib64/nginx/modules \
+				--conf-path=/etc/nginx/nginx.conf \
+				--pid-path=/var/run/nginx.pid \
+				--lock-path=/var/run/nginx.lock \
+				--http-uwsgi-temp-path=/var/lib/nginx/uwsgi \
+				--http-scgi-temp-path=/var/lib/nginx/scgi \
+				--http-proxy-temp-path=/var/lib/nginx/proxy \
+				--http-fastcgi-temp-path=/var/lib/nginx/fastcgi \
+				--http-client-body-temp-path=/var/lib/nginx/body \
+				--error-log-path=/var/log/nginx/error.log \
+				--http-log-path=/var/log/nginx/access.log \
+				--user=nginx \
+				--group=nginx \
+				--build=Yannyann.com \
+				--with-debug \
+				--with-stream_ssl_module \
+				--with-compat \
+				--with-mail=dynamic \
+				--with-mail_ssl_module \
+				--with-http_mp4_module \
+				--with-http_flv_module \
+				--with-http_gunzip_module \
+				--with-http_ssl_module \
+				--with-http_v2_module \
+				--with-http_gzip_static_module \
+				--with-http_degradation_module \
+				--with-http_sub_module \
+				--with-threads \
+				--with-poll_module \
+				--with-http_dav_module \
+				--with-http_auth_request_module \
+				--with-stream_realip_module \
+				--with-http_slice_module \
+				--with-http_secure_link_module \
+				--with-http_stub_status_module \
+				--with-http_realip_module \
+				--with-http_addition_module \
+				--with-http_random_index_module \
+				--with-stream=dynamic \
+				--with-stream_geoip_module=dynamic \
+				--with-stream_ssl_preread_module \
+				--with-http_perl_module=dynamic \
+				--with-select_module \
+				--with-http_xslt_module=dynamic \
+				--with-http_image_filter_module=dynamic \
+				--with-libatomic \
 				--with-google_perftools_module \
-	            --with-http_random_index_module \
-	            --with-http_auth_request_module \
-	            --with-http_image_filter_module \
-	            --with-stream_ssl_preread_module \
-	            --add-module=../ngx_brotli \
-	            --add-module=../ngx_requestid \
-	            --add-module=../ngx-rtmp-module \
-	            --add-module=../ngx-dav-ext-module \
-	            --add-module=../ngx-sorted-querystring-module \
-	            --add-module=../headers-more-nginx-module \
-	            --with-cc-opt='-g -O3 -m64 -march=native -ffast-math -DTCP_FASTOPEN=23 -fPIE -fstack-protector-strong -flto -fuse-ld=gold --param=ssp-buffer-size=4 -Wformat -Werror=format-security -Wno-unused-parameter -fno-strict-aliasing -fPIC -D_FORTIFY_SOURCE=2 -gsplit-dwarf' \
-	            --with-ld-opt='-lrt -L /usr/local/lib -ljemalloc -Wl,-Bsymbolic-functions -fPIE -pie -Wl,-z,now -fPIC'
-# --with-file-aio \
-# --with-http_v2_hpack_enc \
+				--with-http_geoip_module=dynamic \
+				--with-file-aio \
+				--with-pcre-jit \
+				--with-zlib=../zlib \
+				--with-perl=/usr/bin/perl \
+				--with-openssl=../${OPEN_BORING_SSL_DIR} \
+				--with-openssl-opt=no-nextprotoneg \
+				--add-module=../ngx_brotli \
+				--with-perl_modules_path=/usr/share/perl/${PERL_V} \
+				--with-cc-opt='-g -O3 -m64 -march=native -ffast-math -DTCP_FASTOPEN=23 -fPIE -fstack-protector-strong -flto -fuse-ld=gold --param=ssp-buffer-size=4 -Wformat -Werror=format-security -Wno-unused-parameter -fno-strict-aliasing -fPIC -D_FORTIFY_SOURCE=2' \
+				--with-ld-opt='-lrt -L /usr/local/lib -ljemalloc -Wl,-Bsymbolic-functions -fPIE -pie -Wl,-z,now -fPIC'
+
+# --with-pcre=../pcre \
+# --with-cc-opt='-g -O3 -m64 -march=native -ffast-math -DTCP_FASTOPEN=23 -fPIE -fstack-protector-strong -flto -fuse-ld=gold --param=ssp-buffer-size=4 -Wformat -Werror=format-security -Wno-unused-parameter -fno-strict-aliasing -fPIC -D_FORTIFY_SOURCE=2 -gsplit-dwarf' \
+# --add-module=../headers-more-nginx-module \
+# --add-module=../ngx_requestid \
+# --add-module=../ngx-dav-ext-module \
+# --add-module=../ngx-sorted-querystring-module \
+# --add-module=../ngx-rtmp-module \
 # --add-module=../ngx_http_geoip2_module
 # --add-module=../nginx-module-vts
 # --add-module=../ngx_devel_kit-0.3.0

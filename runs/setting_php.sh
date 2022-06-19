@@ -1,11 +1,10 @@
 #!/bin/bash
 
-#########################################################################################################################
-## Version : 0.0.7-1
-## Developer : Yannyann (https://github.com/a2d8a4v)
-## Website : https://www.yannyann.com
-## License : MIT License
-#########################################################################################################################
+# @https://blog.scottchayaa.com/post/2019/01/13/php-opcache/
+# @https://scar.tw/article/2019/05/29/php-opcache-tuning/
+# @https://gywbd.github.io/posts/2016/1/best-config-for-zend-opcache.html
+# @
+
 
 function setting_php {
 	## -- arguments
@@ -16,6 +15,7 @@ function setting_php {
 	## default is 60
 	local _php_post_maxuploads=260
 	local _php_maxexetime=60
+	local _php_files_count=$(( $( find ${WP_ADMIN_DIR} -type f -print | grep php | wc -l ) * 4 ))
 	## -- php memory max
 	if [ ${MEMORY_H} -le 640 ]; then
 		local _php_maxmem=64
@@ -54,9 +54,14 @@ function setting_php {
 		sed -i '/session.cookie_httponly =/c\session.cookie_httponly = 1' /etc/php/${PHP_VER}/fpm/php.ini
 		sed -i "/opcache.memory_consumption=/c\opcache.memory_consumption=${_php_maxmem}" /etc/php/${PHP_VER}/fpm/php.ini
 		sed -i '/opcache.interned_strings_buffer=/c\opcache.interned_strings_buffer=8' /etc/php/${PHP_VER}/fpm/php.ini
-		sed -i '/opcache.max_accelerated_files=/c\opcache.max_accelerated_files=50000' /etc/php/${PHP_VER}/fpm/php.ini
+		sed -i "/opcache.max_accelerated_files=/c\opcache.max_accelerated_files=${_php_files_count}" /etc/php/${PHP_VER}/fpm/php.ini
 		sed -i '/opcache.enable_cli=/c\opcache.enable_cli=1' /etc/php/${PHP_VER}/fpm/php.ini
 		sed -i '/opcache.enable=/c\opcache.enable=1' /etc/php/${PHP_VER}/fpm/php.ini
+		sed -i '/^;opcache.validate_timestamps=/c\opcache.validate_timestamps=1' /etc/php/${PHP_VER}/fpm/php.ini
+		# sed -i '/^;opcache.use_cwd=/c\opcache.use_cwd=0' /etc/php/${PHP_VER}/fpm/php.ini
+		sed -i '/^;opcache.max_file_size=/c\opcache.max_file_size=0' /etc/php/${PHP_VER}/fpm/php.ini
+		sed -i '/^;opcache.revalidate_freq=/c\opcache.revalidate_freq=30' /etc/php/${PHP_VER}/fpm/php.ini
+		sed -i '/^;opcache.file_cache=/c\opcache.file_cache=\/tmp' /etc/php/${PHP_VER}/fpm/php.ini
 
 		mkdir -p -v /var/log/php/${PHP_VER}
 		touch /var/log/php/${PHP_VER}/fpm.log
@@ -103,5 +108,8 @@ function setting_php {
 		sed -i '/pm.status_path =/c\pm.status_path = /status' /etc/php/${PHP_VER}/fpm/pool.d/www.conf
 		sed -i '/ping.path =/c\ping.path = /ping' /etc/php/${PHP_VER}/fpm/pool.d/www.conf
 	fi
+	# add imagick module
+	echo extension=imagick.so >> /etc/php/${PHP_VER}/cli/php.ini
+	echo extension=imagick.so >> /etc/php/${PHP_VER}/fpm/php.ini
 	service php${PHP_VER}-fpm restart
 }

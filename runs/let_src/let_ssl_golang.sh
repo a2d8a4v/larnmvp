@@ -1,12 +1,5 @@
 #!/bin/bash
 
-#########################################################################################################################
-## Version : 0.0.7-1
-## Developer : Yannyann (https://github.com/a2d8a4v)
-## Website : https://www.yannyann.com
-## License : MIT License
-#########################################################################################################################
-
 function let_ssl_golang {
 	# @https://medium.com/@patdhlk/how-to-install-go-1-9-1-on-ubuntu-16-04-ee64c073cd79
 	# @https://stackoverflow.com/questions/25216765/gobin-not-set-cannot-run-go-install

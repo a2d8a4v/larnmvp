@@ -1,12 +1,5 @@
 #!/bin/bash
 
-#########################################################################################################################
-## Version : 0.0.7-1
-## Developer : Yannyann (https://github.com/a2d8a4v)
-## Website : https://www.yannyann.com
-## License : MIT License
-#########################################################################################################################
-
 function _delete_action {
 	#delete unnessesary directory
 	if [ -d /var/www/html ]; then
@@ -27,6 +20,21 @@ function _delete_action {
 	# clean the hitory data in auth log
 	if [[ -e "/var/log/auth.log" ]]; then
 		echo "" > /var/log/auth.log
+	fi
+
+	# clean the hitory data in last login log
+	if [[ -e "/var/log/lastlog" ]]; then
+		echo "" > /var/log/lastlog
+	fi
+
+	# clean the hitory data in tallylog
+	if [[ -e "/var/log/tallylog" ]]; then
+		echo "" > /var/log/tallylog
+	fi
+
+	# clean the hitory data in mysql log
+	if [[ -e "~/.mysql_history" ]]; then
+		rm ~/.mysql_history || echo
 	fi
 
 	# remove all history for security issues
@@ -66,11 +74,6 @@ function _delete_action {
 	# delete all, it is the fast way
 	if [[ -d ${dir} ]]; then
 		rm -R ${dir}
-	fi
-
-	#delete unnessesary directory
-	if [ -d ${_INSTALL_DIR} ]; then
-		rm -R ${_INSTALL_DIR}
 	fi
 
 	# go back to root chroot

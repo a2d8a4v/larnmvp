@@ -1,11 +1,10 @@
 #!/bin/bash
 
 #########################################################################################################################
-## Great domain
-## Version : 0.0.1
+## blacklist domain
+## version 0.0.1
 ## Developer : Yannyann (https://github.com/a2d8a4v)
 ## Website   : https://www.yannyann.com
-## License : MIT License
 #########################################################################################################################
 
 ## -- Referance block

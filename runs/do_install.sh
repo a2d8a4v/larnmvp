@@ -1,12 +1,5 @@
 #!/bin/bash
 
-#########################################################################################################################
-## Version : 0.0.7-1
-## Developer : Yannyann (https://github.com/a2d8a4v)
-## Website : https://www.yannyann.com
-## License : MIT License
-#########################################################################################################################
-
 function do_install {
 	clear
 	echo "### Initializing..."
@@ -88,12 +81,16 @@ function do_install {
 	install_nginx > $dnuloger 2>&1
 	setting_nginx > $dnuloger 2>&1
 	LOG_T > $dnuloger 2>&1 
+	#echo "### Installing Caddy..."
+	#sleep_short_time
+	#install_caddy > $dnuloger 2>&1
+	#LOG_T > $dnuloger 2>&1
 	echo "### Installing Varnish 6..."
 	## -- this should put under Letsencrypt or vertification would be not successful for I added the bot-block function
 	sleep_short_time
 	install_varnish > $dnuloger 2>&1
 	LOG_T > $dnuloger 2>&1
-	echo "### Installing Redis 5..."
+	echo "### Installing Redis ${REDIS_VER}..."
 	## -- Notice : This progess will take some time to finish.
 	sleep_short_time
 	install_redis > $dnuloger 2>&1

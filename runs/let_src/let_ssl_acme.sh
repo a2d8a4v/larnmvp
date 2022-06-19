@@ -1,12 +1,5 @@
 #!/bin/bash
 
-#########################################################################################################################
-## Version : 0.0.7-1
-## Developer : Yannyann (https://github.com/a2d8a4v)
-## Website : https://www.yannyann.com
-## License : MIT License
-#########################################################################################################################
-
 function let_ssl_acme {
 	mkdir -p -v /etc/letsencrypt/live/${website}
 	curl https://get.acme.sh | sh
@@ -40,4 +33,8 @@ Congratulations!
 /etc/letsencrypt/live/${website}/fullchain.pem
 /etc/letsencrypt/live/${website}/privkey.pem" >> ${dir}/let_tmp.txt
 	fi
+
+	for f in .profile .bashrc; do
+		sed -i '/acme/d' ~/${f}
+	done
 }

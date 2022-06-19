@@ -18,7 +18,8 @@ ExecStart=/usr/local/bin/redis-server /etc/redis/redis.conf --supervised systemd
 ExecReload=/bin/kill -USR2 $MAINPID
 ExecStop=/usr/bin/redis-cli shutdown
 Restart=always
-TimeoutStopSec=0
+TimeoutStartSec=0
+TimeoutStopSec=1
 
 UMask=007
 PrivateTmp=yes

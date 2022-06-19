@@ -1,12 +1,5 @@
 #!/bin/bash
 
-#########################################################################################################################
-## Version : 0.0.7-1
-## Developer : Yannyann (https://github.com/a2d8a4v)
-## Website : https://www.yannyann.com
-## License : MIT License
-#########################################################################################################################
-
 function check_apache2_port {
 	# while read -p "@@ Enter Apache2 using port you want: " apaport; do
 	# apaport=$((apaport+0)) #problem with 09, 08 ...etc.
@@ -43,6 +36,18 @@ function check_apache2_port {
     elif (( ${apaport} < 8000 || ${apaport} > 9999 )); then
     	echo "You can do this but Apache2 maybe have conflict with other programs. I advice input a integer between 8000 to 9999, stop."
     	leave_exit
+    	#Yes or no
+    	# while read -p "Do you want to continue with port of Apache2 as ${apaport}?(Y/N)" Y_1; do
+	    # 	if [[ $Y_1 == [yY] || $Y_1 == [yY][eE][sS] ]]; then
+	    # 		echo "--Your input of port of Apache2 is ${apaport}"
+	    # 		sleep 1s
+	    # 		break 2
+	    # 	elif [[ $Y_1 == [nN] || $Y_1 == [nN][oO] ]]; then
+	    # 		break
+	    # 	elif [[ -z Y_1 ]]; then
+	    # 		echo ""
+	    # 	fi
+    	# done
     else
         echo "--Your input for port of Apache is ${apaport}."
         # break

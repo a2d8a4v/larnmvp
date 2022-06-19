@@ -6,7 +6,7 @@ sed -i 's/.*bad_bot.vcl/#&/;s/.*bad_ip.vcl/#&/;s/.*call bad_bot/#&/;s/.*call unw
 service varnish restart
 
 # update ssl
-/opt/letsencrypt/certbot-auto renew --quiet --no-self-upgrade --post-hook "service nginx reload"
+/usr/bin/certbot renew --quiet --no-self-upgrade --post-hook "service nginx reload"
 
 # restore varnish
 mv -f /etc/varnish/yannyann_varnish_defaultbak /etc/varnish/yannyann_varnish_default

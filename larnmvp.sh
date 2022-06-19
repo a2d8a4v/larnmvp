@@ -1,10 +1,14 @@
 #!/bin/bash
 
 #########################################################################################################################
-## Version : 0.0.7-1
+## Version : 0.0.7-2
 ## Developer : Yannyann (https://github.com/a2d8a4v)
-## Website : https://www.yannyann.com
-## License : MIT License
+## This file is also referenced from cerbot-auto and easyengine 4 install shell script as example
+## Thanks for @wartw98 at Github help me fix the openssh-serve attended installation problem.
+## For the installition will take some time, i think it is better to run some tools like "screen" make the script run 
+## even if the terminal disconnect with the vps
+## 
+## Let's start install!! Enjoy it!
 #########################################################################################################################
 
 # working even if somebody run "sh larnmvp.sh"
@@ -20,7 +24,7 @@ readonly _ME=$(basename "$0")
 readonly _REAL_ME="larnmvp.sh"
 
 ## -- create the run chroot
-mkdir -v -p ${OPT}
+mkdir -pv ${OPT}
 
 ## -- if this file is not named larnmvp.sh, rename it
 # @https://stackoverflow.com/questions/192319/how-do-i-know-the-script-file-name-in-a-bash-script
@@ -52,27 +56,15 @@ readonly tools="${dir}/tools"
 readonly check="${dir}/check"
 readonly modules="${dir}/modl"
 
-## -- Some settings released in the future
-# Caddy Server or Nginx Server, default is nginx, you can only type: nginx or caddy
-CADDY_NGINX="nginx"
-# sftp account in OS system, default is empty
-ADMNAME=""
-# WordPress dicretory, default is wphtml, can only type in numbers and characters
-WP_AD="wphtml"
-# The port of Apache, default is 8080
-apaport="8080"
-# The port of SFTP, default is 22
-sftpport="22"
-
 ## -- import all the tools we need
 . ${imp}/import_tools.sh
 . ${imp}/import_check.sh
 . ${imp}/import_runs.sh
-. ${imp}/import_modules.sh
+#. ${imp}/import_modules.sh
 import_tools
 import_check
 import_runs
-import_modules
+#import_modules
 
 ## -- import basic arguments
 do_arguments_setup

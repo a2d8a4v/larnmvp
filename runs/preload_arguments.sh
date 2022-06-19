@@ -1,12 +1,5 @@
 #!/bin/bash
 
-#########################################################################################################################
-## Version : 0.0.7-1
-## Developer : Yannyann (https://github.com/a2d8a4v)
-## Website : https://www.yannyann.com
-## License : MIT License
-#########################################################################################################################
-
 ################################################################################################################################
 #
 # /*** Import variables first ***/
@@ -45,7 +38,20 @@ function preload_arguments {
 	## making webroot name
 	# under the website full-path structure, should seperate into three type: base directory, site directory, wordpress directory
 	IFS=\. read -a array_webrootname <<< "${website}"
-	if [[ "${array_webrootname[0]}" != "www" ]] && (( ${#array_webrootname[@]} == 3 )) ; then
+	if [[ "${array_webrootname[0]}" != "www" ]] && (( ${#array_webrootname[@]} == 5 )) ; then
+		webrdic="${array_webrootname[0]}_${array_webrootname[1]}_${array_webrootname[2]}_${array_webrootname[3]}_${array_webrootname[4]}"
+		domain_first="${array_webrootname[0]}"
+		domain_middle="${array_webrootname[1]}"
+		domain_last="${array_webrootname[2]}"
+		domain_lastb="${array_webrootname[3]}"
+		domain_lastc="${array_webrootname[4]}"
+	elif [[ "${array_webrootname[0]}" != "www" ]] && (( ${#array_webrootname[@]} == 4 )) ; then
+		webrdic="${array_webrootname[0]}_${array_webrootname[1]}_${array_webrootname[2]}_${array_webrootname[3]}"
+		domain_first="${array_webrootname[0]}"
+		domain_middle="${array_webrootname[1]}"
+		domain_last="${array_webrootname[2]}"
+		domain_lastb="${array_webrootname[3]}"
+	elif [[ "${array_webrootname[0]}" != "www" ]] && (( ${#array_webrootname[@]} == 3 )) ; then
 		webrdic="${array_webrootname[0]}_${array_webrootname[1]}_${array_webrootname[2]}"
 		domain_first="${array_webrootname[0]}"
 		domain_middle="${array_webrootname[1]}"
@@ -138,7 +144,33 @@ function preload_arguments {
 
 	## Decide the domain name and Database name
 	IFS=\. read -a array_website <<< "${website}"
-	if [[ "${array_website[0]}" != "www" ]] && (( ${#array_website[@]} == 3 )) ; then
+	if [[ "${array_website[0]}" != "www" ]] && (( ${#array_website[@]} == 5 )) ; then
+		domain=$website
+		apache2default="${array_website[0]}_${array_website[1]}_${array_website[2]}_${array_website[3]}_${array_website[4]}.conf"
+		varnishdefault="${array_website[0]}_${array_website[1]}_${array_website[2]}_${array_website[3]}_${array_website[4]}.vcl"
+		if [[ ${CADDY_NGINX} == "nginx" ]]; then
+			nginxdefault=($arg ${array_website[0]}"_"${array_website[1]}"_"${array_website[2]}"_"${array_website[3]}"_"${array_website[4]})
+		elif [[ ${CADDY_NGINX} == "caddy" ]]; then
+			caddydefault=($arg ${array_website[0]}"_"${array_website[1]}"_"${array_website[2]}"_"${array_website[3]}"_"${array_website[4]})
+		else
+			nginxdefault=($arg ${array_website[0]}"_"${array_website[1]}"_"${array_website[2]}"_"${array_website[3]}"_"${array_website[4]})
+		fi
+		dbname="${array_website[0]}_${array_website[1]}_${array_website[2]}_${array_website[3]}_${array_website[4]}_main"
+		let_use_domain_www=($arg "www."${array_website[0]}"."${array_website[1]}"."${array_website[2]}"."${array_website[3]}"."${array_website[4]})
+	elif [[ "${array_website[0]}" != "www" ]] && (( ${#array_website[@]} == 4 )) ; then
+		domain=$website
+		apache2default="${array_website[0]}_${array_website[1]}_${array_website[2]}_${array_website[3]}.conf"
+		varnishdefault="${array_website[0]}_${array_website[1]}_${array_website[2]}_${array_website[3]}.vcl"
+		if [[ ${CADDY_NGINX} == "nginx" ]]; then
+			nginxdefault=($arg ${array_website[0]}"_"${array_website[1]}"_"${array_website[2]}"_"${array_website[3]})
+		elif [[ ${CADDY_NGINX} == "caddy" ]]; then
+			caddydefault=($arg ${array_website[0]}"_"${array_website[1]}"_"${array_website[2]}"_"${array_website[3]})
+		else
+			nginxdefault=($arg ${array_website[0]}"_"${array_website[1]}"_"${array_website[2]}"_"${array_website[3]})
+		fi
+		dbname="${array_website[0]}_${array_website[1]}_${array_website[2]}_${array_website[3]}_main"
+		let_use_domain_www=($arg "www."${array_website[0]}"."${array_website[1]}"."${array_website[2]}"."${array_website[3]})
+	elif [[ "${array_website[0]}" != "www" ]] && (( ${#array_website[@]} == 3 )) ; then
 		domain=$website
 		apache2default="${array_website[0]}_${array_website[1]}_${array_website[2]}.conf"
 		varnishdefault="${array_website[0]}_${array_website[1]}_${array_website[2]}.vcl"
@@ -320,6 +352,9 @@ function preload_arguments {
 	# CORE_U=$(( $( grep processor /proc/cpuinfo | wc -l ) * 2 ))
 	CORE_U="auto"
 	ULIMIT_U=$(( $( ulimit -n ) * 4 ))
+
+	## -- perl version
+	PERL_V=$(perl -e 'print "$^V\n"' | cut -f 2 -d v)
 
 	## -- OS information
 	SWAP_FILE="/swapfile"

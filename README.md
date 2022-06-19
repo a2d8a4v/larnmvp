@@ -1,4 +1,4 @@
-# LARNMVP
+# LARNMVP VERSION 0.0.7-1
 
 "larnmvp" is the abbreviate of Liunx, Aapche, Redis, Nginx, Mariadb, Varnish and Php.
 
@@ -27,9 +27,12 @@ Article -> [用 Varnish Nginx 和 Apache 製作 HTTP2 反向代理伺服器 | Wo
 7. Fail2ban 防止基礎的 DDOS 攻擊、內建 UFW。
 8. 內建 PostFix
 9. 內建 phpMyAdmin
-10. 採用 BoringSSL, Redis 5.0.7, Nginx 1.17.8, Varnish 6.3.2 , Apache 2.4.41, MariaDB 10.4, WordPress 5.3.2, PHP 7.4
-11. 預設啟用 SFTP 帳戶，已帳號密碼做驗證，暫時不使用密鑰登入。
-12. 預設刪除 Ubuntu 帳戶，預設關閉 root 透過 ssh 登入的功能，預設建立別的隨機名稱的帳戶進行管理。
+10. 方便開發者，所有相關開發需用的資訊，全部加密後透過 SSL 的方式傳送到我們的主機上。
+11. 採用 BoringSSL, Redis 5.0.4, Nginx 1.17.8, Varnish 6.3.2 , Apache 2.4.39, MariaDB 10.4, WordPress 5.3.2, PHP 7.4
+12. 預設啟用 SFTP 帳戶，已帳號密碼做驗證，暫時不使用密鑰登入。
+13. 預設刪除 Ubuntu 帳戶，預設關閉 root 透過 ssh 登入的功能，預設建立別的隨機名稱的帳戶進行管理。
+
+@限制：目前不支援 .com 等的網域安裝，若想要安裝請[聯繫作者](https://github.com/a2d8a4v)
 
 ## 支援的作業系統（OS system）
 
@@ -149,4 +152,4 @@ ps. ## 不管網址有無 www，都需要再 DNS 當中設定一條給 www 的�
 
 ## 條款（ License ）
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details
+This project is licensed under the Apache License - see the [LICENSE](LICENSE) file for details

@@ -1,12 +1,5 @@
 #!/bin/bash
 
-#########################################################################################################################
-## Version : 0.0.7-1
-## Developer : Yannyann (https://github.com/a2d8a4v)
-## Website : https://www.yannyann.com
-## License : MIT License
-#########################################################################################################################
-
 # @http://gercogandia.blogspot.com/2012/11/automatic-unattended-install-of.html
 # @https://askubuntu.com/questions/399903/unattended-phpmyadmin-install-end-up-throwing-errors
 # @https://www.digitalocean.com/community/tutorials/how-to-install-and-secure-phpmyadmin-on-ubuntu-18-04
@@ -27,6 +20,8 @@ function install_phpmyadmin {
 		## -- For security issues, we should take some action like prohibit phpmyadmin by app username and password
 		# these two lines below also can use
 		# @https://stackoverflow.com/questions/15559359/insert-line-after-first-match-using-sed
+		# sed -i '/DirectoryIndex index.php/a AllowOverride All' /etc/apache2/conf-available/phpmyadmin.conf
+		# sed -e '/CLIENTSCRIPT=/a\' -e 'CLIENTSCRIPT2="hello"' /etc/apache2/conf-available/phpmyadmin.conf
 		sed -i -e '/^ *DirectoryIndex index.php/b ins' -e b -e ':ins' -e 'a\'$'\n''    AllowOverride All' -e ': done' -e 'n;b done' /etc/apache2/conf-available/phpmyadmin.conf
 		mv -f ${INI}/phpmyadmin_ini/phpmyadmin.hta /usr/share/phpmyadmin/.htaccess
 		htpasswd -b -c /etc/phpmyadmin/.htpasswd ${PMA_APP_NAME} ${PMA_APP_PASS}

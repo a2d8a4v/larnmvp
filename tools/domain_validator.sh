@@ -1,12 +1,5 @@
 #!/bin/bash
 
-#########################################################################################################################
-## Version : 0.0.7-1
-## Developer : Yannyann (https://github.com/a2d8a4v)
-## Website : https://www.yannyann.com
-## License : MIT License
-#########################################################################################################################
-
 function domain_validator {
 	local test="$1"
 	local test2=$(echo "$1" | sed "s/[^\.0-9A-Za-z\-]/_/g" | sed "s/^[\.]/_/g" | sed "s/\.\./_/g")

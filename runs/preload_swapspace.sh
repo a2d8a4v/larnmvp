@@ -1,12 +1,5 @@
 #!/bin/bash
 
-#########################################################################################################################
-## Version : 0.0.7-1
-## Developer : Yannyann (https://github.com/a2d8a4v)
-## Website : https://www.yannyann.com
-## License : MIT License
-#########################################################################################################################
-
 function preload_swapspace {
 	if [[ ${SWAP_N_SIZE} -gt 0 ]];then
 		fallocate -l ${SWAP_N_SIZE}M ${SWAP_FILE}

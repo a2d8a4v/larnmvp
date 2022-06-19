@@ -1,12 +1,5 @@
 #!/bin/bash
 
-#########################################################################################################################
-## Version : 0.0.7-1
-## Developer : Yannyann (https://github.com/a2d8a4v)
-## Website : https://www.yannyann.com
-## License : MIT License
-#########################################################################################################################
-
 #run update and upgarde
 function preload_updateupgrade {
 	##@@@@it update could have some interactive action , like openssh-server for i change the configuration of ssh config
@@ -31,3 +24,27 @@ function preload_updateupgrade {
 		APT_REMOVE="YES"
 	fi
 }
+
+#==============
+
+#Package configuration
+
+
+ #┌─────────────────────────────────────────────────────┤ Configuring openssh-server ├─────────────────────────────────────────────────────┐
+ #│ A new version (/tmp/fileNJIy1j) of configuration file /etc/ssh/sshd_config is available, but the version installed currently has been  │ 
+ #│ locally modified.                                                                                                                      │ 
+ #│                                                                                                                                        │ 
+ #│ What do you want to do about modified configuration file sshd_config?                                                                  │ 
+ #│                                                                                                                                        │ 
+ #│                                          install the package maintainer's version                                                      │ 
+ #│                                          keep the local version currently installed                                                    │ 
+ #│                                          show the differences between the versions                                                     │ 
+ #│                                          show a side-by-side difference between the versions                                           │ 
+ #│                                          show a 3-way difference between available versions                                            │ 
+ #│                                          do a 3-way merge between available versions                                                   │ 
+ #│                                          start a new shell to examine the situation                                                    │ 
+ #│                                                                                                                                        │ 
+ #│                                                                                                                                        │ 
+ #│                                                                 <Ok>       
+
+ #==============

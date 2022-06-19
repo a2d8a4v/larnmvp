@@ -2,10 +2,9 @@
 
 #########################################################################################################################
 ## Easter Eag
-## Version : 0.0.1
+## version 0.0.1
 ## Developer : Yannyann (https://github.com/a2d8a4v)
 ## Website   : https://www.yannyann.com
-## License : MIT License
 #########################################################################################################################
 
 ## -- Referance block
@@ -32,12 +31,12 @@ function yannyann-easter-egg {
 	IFS='.' read -ra _tmp_array <<< "${_tmp_addrip}"; unset IFS
 	local _tmp="$(python ${modules}/yannyann-easter-egg/get_ipaddr_isp.py ${_tmp_addrip})"
 	local _tmp2="$(python ${modules}/yannyann-easter-egg/get_ipaddr_as.py ${_tmp_addrip})"
-	[[ -n $( grep -i "National Taiwan University" "${_tmp}" ) ]] || [[ -n $( grep -i "National Taiwan University" "${_tmp2}" ) ]] && [[ "${_tmp_array[0]}" -eq "140" ]] && [[ "${_tmp_array[1]}" -eq "112" ]] && { clear; sleep 1s; echo "
+	[ -n $( grep -i "National Taiwan University" "${_tmp}" ) -o -n $( grep -i "National Taiwan University" "${_tmp2}" ) -a "${_tmp_array[0]}" -eq "140" -a "${_tmp_array[1]}" -eq "112" ] && { clear; sleep 1s; echo "
 ${red_c}################################################################################${end_c}
 Hello, I'm ${pur_c}YannYann${end_c}, also graduated from ${gre_c}National Taiwan University${end_c},
 ${blu_c}Now THANK YOU for using my projects, hope you can use my project without
 difficulties, even hope you can learn something more from my project.${end_c}
 ${whi_c}The setup will continue in 5 seconds...${end_c}
-${red_c}################################################################################${end_c}"; sleep 5s;}
+${red_c}################################################################################${end_c}"; sleep 5s}
 	unset _tmp_array
 }

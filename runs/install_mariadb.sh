@@ -1,12 +1,5 @@
 #!/bin/bash
 
-#########################################################################################################################
-## Version : 0.0.7-1
-## Developer : Yannyann (https://github.com/a2d8a4v)
-## Website : https://www.yannyann.com
-## License : MIT License
-#########################################################################################################################
-
 function install_mariadb {
 	export DEBIAN_FRONTEND="noninteractive"
 	echo "mariadb-server-10.4 mysql-server/root_password password ${mariadbpasswd}" | debconf-set-selections
@@ -16,3 +9,74 @@ function install_mariadb {
 	systemctl enable mariadb
 	# thinking about install phpmyadmin silent
 }
+
+
+###
+#Package configuration
+#
+#
+#
+#
+#
+#
+#
+#
+# ┌──────────────────────────────────────┤ Configuring mariadb-server-10.3 ├──────────────────────────────────────┐
+# │ While not mandatory, it is highly recommended that you set a password for the MariaDB administrative "root"   │ 
+# │ user.                                                                                                         │ 
+# │                                                                                                               │ 
+# │ If this field is left blank, the password will not be changed.                                                │ 
+# │                                                                                                               │ 
+# │ New password for the MariaDB "root" user:                                                                     │ 
+# │                                                                                                               │ 
+# │ _____________________________________________________________________________________________________________ │ 
+# │                                                                                                               │ 
+# │                                                    <Ok>                                                       │ 
+# │                                                                                                               │ 
+# └───────────────────────────────────────────────────────────────────────────────────────────────────────────────┘ 
+#                                                                                                                   
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+
+
+
+# Package configuration
+
+
+
+
+
+
+
+
+
+
+#                                  ┌──────┤ Configuring mariadb-server-10.3 ├──────┐
+#                                  │                                               │ 
+#                                  │                                               │ 
+#                                  │ Repeat password for the MariaDB "root" user:  │ 
+#                                  │                                               │ 
+#                                  │ _____________________________________________ │ 
+#                                  │                                               │ 
+#                                  │                    <Ok>                       │ 
+#                                  │                                               │ 
+#                                  └───────────────────────────────────────────────┘ 
+                                                                                   
+
+
+
+
+
+
+
+
+
+

@@ -1,12 +1,5 @@
 #!/bin/bash
 
-#########################################################################################################################
-## Version : 0.0.7-1
-## Developer : Yannyann (https://github.com/a2d8a4v)
-## Website : https://www.yannyann.com
-## License : MIT License
-#########################################################################################################################
-
 function install_caddy_run {
 	# @https://computingforgeeks.com/install-caddy-web-server-on-an-ubuntu-18-04-with-lets-encrypt-ssl/
 	# @https://computingforgeeks.com/host-wordpress-website-with-caddy-web-server/

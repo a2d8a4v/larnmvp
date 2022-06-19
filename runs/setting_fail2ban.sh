@@ -1,12 +1,5 @@
  #!/bin/bash
 
-#########################################################################################################################
-## Version : 0.0.7-1
-## Developer : Yannyann (https://github.com/a2d8a4v)
-## Website : https://www.yannyann.com
-## License : MIT License
-#########################################################################################################################
-
 #https://ubuntu101.co.za/security/fail2ban/fail2ban-persistent-bans-ubuntu/
 function setting_fail2ban {
 	mv -f ${INI}/fail2ban_ini/blacklist.conf /etc/fail2ban/filter.d

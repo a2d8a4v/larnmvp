@@ -1,12 +1,5 @@
 #!/bin/bash
 
-#########################################################################################################################
-## Version : 0.0.7-1
-## Developer : Yannyann (https://github.com/a2d8a4v)
-## Website : https://www.yannyann.com
-## License : MIT License
-#########################################################################################################################
-
 function setting_letsencrypt_run {
 	mv -f ${INI}/apache_ini/apafake.conf /etc/apache2/sites-available/000-default.conf
 	service apache2 restart

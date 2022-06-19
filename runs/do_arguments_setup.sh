@@ -1,22 +1,15 @@
 #!/bin/bash
 
-#########################################################################################################################
-## Version : 0.0.7-1
-## Developer : Yannyann (https://github.com/a2d8a4v)
-## Website : https://www.yannyann.com
-## License : MIT License
-#########################################################################################################################
-
 function do_arguments_setup {
 	## -- php7.3 or php7.4
 	## default is 7.4
-	readonly PHP_VER="7.4"
-	# readonly PHP_VER="7.3"
+	readonly PHP_VER="8.1"
+	# readonly PHP_VER="7.4"
 
 	# boringssl or openssl
-	## default is b
-	readonly SSL_CONF="b"
-	# readonly SSL_CONF="o"
+	## default is o
+	# readonly SSL_CONF="b"
+	readonly SSL_CONF="o"
 
 	# use nginx from source or fork by Google
 	## default is google
@@ -34,13 +27,19 @@ function do_arguments_setup {
 	# readonly IS_BETA_WP="yes"
 
 	# the version of WordPress
-	## default is 5.3.2
-	readonly WP_VER="5.3.2"
-	# readonly WP_VER="5.2.2"
+	## default is 5.9.3
+	readonly WP_VER="5.9.3"
+	# readonly WP_VER="5.8"
 
 	# the version of Nginx
-	readonly NGINX_VER="1.17.8"
-	# readonly NGINX_VER="1.15.12"
+	## default is 1.20.1
+	readonly NGINX_VER="1.20.2"
+	# readonly NGINX_VER="1.19.10"
+
+	# the version of redis
+	## default is 5.0.9
+	readonly REDIS_VER="5.0.9"
+	# readonly REDIS_VER="6.0.10"
 
 	# the version of bazel
 	## default is 0.21.0
@@ -67,8 +66,8 @@ function do_arguments_setup {
 	readonly END_YANN_SSL_KEY="-----END PRIVATE KEY-----"
 
 	## -- controling for showing on screen or hide message
-	readonly dnuloger="/dev/null"
-	# readonly dnuloger="/dev/tty"
+	# readonly dnuloger="/dev/null"
+	readonly dnuloger="/dev/tty"
 	# readonly dnuloger="/home/ubuntu/.larnmvp_process.txt"
 	# @https://stackoverflow.com/questions/25635071/bash-redirect-to-screen-or-dev-null-depending-on-flag
 }

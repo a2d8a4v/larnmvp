@@ -11,7 +11,7 @@ LimitNOFILE=131072
 # (varnishd -l argument)
 # Default log size is 80MB vsl + 1M vsm + header -> 82MB
 # unit is bytes
-LimitMEMLOCK=44040192
+LimitMEMLOCK=169869312
 
 # On systemd >= 228 enable this to avoid "fork failed" on reload.
 #TasksMax=infinity

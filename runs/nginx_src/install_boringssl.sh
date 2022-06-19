@@ -1,12 +1,5 @@
 #!/bin/bash
 
-#########################################################################################################################
-## Version : 0.0.7-1
-## Developer : Yannyann (https://github.com/a2d8a4v)
-## Website : https://www.yannyann.com
-## License : MIT License
-#########################################################################################################################
-
 function install_boringssl {
 	## -- BoringSSL
 	# @https://www.dcc.cat/nginx-google/
@@ -23,16 +16,17 @@ function install_boringssl {
 	# cd ${dir}/${NGINX_INSTALL}
 
 	# this is another verison of method
-	mkdir -p -v ${dir}/${NGINX_INSTALL}
+	mkdir -pv ${dir}/${NGINX_INSTALL}
 	cd ${dir}/${NGINX_INSTALL}
 	if [[ -d "${dir}/${NGINX_INSTALL}/${OPEN_BORING_SSL_DIR}" ]];then
 		rm -rf ${dir}/${NGINX_INSTALL}/${OPEN_BORING_SSL_DIR}
 	fi
 	git clone -b master https://github.com/google/boringssl.git ${dir}/${NGINX_INSTALL}/${OPEN_BORING_SSL_DIR} && cd ${dir}/${NGINX_INSTALL}/${OPEN_BORING_SSL_DIR}
-	mkdir -p -v ${dir}/${NGINX_INSTALL}/${OPEN_BORING_SSL_DIR}/build
-	mkdir -p -v ${dir}/${NGINX_INSTALL}/${OPEN_BORING_SSL_DIR}/.openssl/lib
-	mkdir -p -v $${dir}/${NGINX_INSTALL}/${OPEN_BORING_SSL_DIR}/.openssl/include
-	ln -s ${dir}/${NGINX_INSTALL}/${OPEN_BORING_SSL_DIR}/include ${dir}/${NGINX_INSTALL}/${OPEN_BORING_SSL_DIR}/.openssl
+	mkdir -pv ${dir}/${NGINX_INSTALL}/${OPEN_BORING_SSL_DIR}/build
+	mkdir -pv ${dir}/${NGINX_INSTALL}/${OPEN_BORING_SSL_DIR}/.openssl/lib
+	mkdir -pv ${dir}/${NGINX_INSTALL}/${OPEN_BORING_SSL_DIR}/.openssl/include
+	mkdir -pv ${dir}/${NGINX_INSTALL}/${OPEN_BORING_SSL_DIR}/.openssl/include/openssl/
+	# ln -sf ${dir}/${NGINX_INSTALL}/${OPEN_BORING_SSL_DIR}/include ${dir}/${NGINX_INSTALL}/${OPEN_BORING_SSL_DIR}/.openssl
 	touch ${dir}/${NGINX_INSTALL}/${OPEN_BORING_SSL_DIR}/.openssl/include/openssl/ssl.h
 	cmake -B${dir}/${NGINX_INSTALL}/${OPEN_BORING_SSL_DIR}/build -H${dir}/${NGINX_INSTALL}/${OPEN_BORING_SSL_DIR}
 	make -C ${dir}/${NGINX_INSTALL}/${OPEN_BORING_SSL_DIR}/build -j$(nproc --all)

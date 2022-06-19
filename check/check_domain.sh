@@ -1,12 +1,5 @@
 #!/bin/bash
 
-#########################################################################################################################
-## Version : 0.0.7-1
-## Developer : Yannyann (https://github.com/a2d8a4v)
-## Website : https://www.yannyann.com
-## License : MIT License
-#########################################################################################################################
-
 function check_domain {
 	# while read -p "@@ Enter your domain: " website; do
 	# TEST_DOMAIN=`echo $website | grep -P '(?=^.{5,254}$)(^(?:(?!\d+\.)[a-zA-Z0-9_\-]{1,63}\.?)+(?:[a-zA-Z]{2,})$)'`
@@ -22,4 +15,11 @@ function check_domain {
 		echo "--Your website is ${website}"
 		# break
 	fi
+	# if [[ -z $TEST_DOMAIN ]]; then
+	# 	echo "--Your domain is $website"
+	# 	break
+	# else
+	# 	echo "You have a wrong regex of your input."
+	# fi
+	# done
 }

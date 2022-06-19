@@ -1,12 +1,5 @@
 #!/bin/bash
 
-#########################################################################################################################
-## Version : 0.0.7-1
-## Developer : Yannyann (https://github.com/a2d8a4v)
-## Website : https://www.yannyann.com
-## License : MIT License
-#########################################################################################################################
-
 ## --- Please arrange the files by the order of installation 
 # here is mvc , v part
 function import_tools {
@@ -25,7 +18,7 @@ function import_tools {
 	. ${tools}/sleep_short_time.sh
 	. ${tools}/check_point.sh
 	. ${tools}/lower_case.sh
-	#. ${tools}/protect_key.sh
+	. ${tools}/protect_key.sh
 	. ${tools}/timestamp.sh
 	. ${tools}/getyeardays.sh
 	. ${tools}/internet_on.sh

@@ -1,12 +1,5 @@
 #!/bin/bash
 
-#########################################################################################################################
-## Version : 0.0.7-1
-## Developer : Yannyann (https://github.com/a2d8a4v)
-## Website : https://www.yannyann.com
-## License : MIT License
-#########################################################################################################################
-
 #import the settings about the information which typed by users
 function preload_modify_ini {
 	## -- make apache2 configuration file can be renamed
@@ -74,7 +67,13 @@ function preload_modify_ini {
 	cp -f ${INI}/nginx_ini/to_www_nginx.conf ${INI}/nginx_ini/to_www_nginx2.conf
 	sed -i -e '\,//\*\*insert_yannyann\*//, { d }' ${INI}/nginx_ini/default2
 	## if website is non www, redirect to non-www under 443
-	if [[ -n ${domain_first} ]]; then
+	if [[ -n ${domain_lastc} && -n ${domain_lastb} && -n ${domain_first} ]]; then
+		sed -i 's/yannyann_web_domain/'${domain_first}'.'${domain_middle}'.'${domain_last}'.'${domain_lastb}'.'${domain_lastc}'/g' ${INI}/nginx_ini/to_www_nginx.conf
+		sed -i 's/yannyann_web_domain/'${domain_first}'.'${domain_middle}'.'${domain_last}'.'${domain_lastb}'.'${domain_lastc}'/g' ${INI}/nginx_ini/to_nonwww_nginx.conf
+	elif [[ -n ${domain_lastb} && -n ${domain_first} ]]; then
+		sed -i 's/yannyann_web_domain/'${domain_first}'.'${domain_middle}'.'${domain_last}'.'${domain_lastb}'/g' ${INI}/nginx_ini/to_www_nginx.conf
+		sed -i 's/yannyann_web_domain/'${domain_first}'.'${domain_middle}'.'${domain_last}'.'${domain_lastb}'/g' ${INI}/nginx_ini/to_nonwww_nginx.conf
+	elif [[ -n ${domain_first} ]]; then
 		sed -i 's/yannyann_web_domain/'${domain_first}'.'${domain_middle}'.'${domain_last}'/g' ${INI}/nginx_ini/to_www_nginx.conf
 		sed -i 's/yannyann_web_domain/'${domain_first}'.'${domain_middle}'.'${domain_last}'/g' ${INI}/nginx_ini/to_nonwww_nginx.conf
 	else

@@ -1,12 +1,5 @@
 #!/bin/bash
 
-#########################################################################################################################
-## Version : 0.0.7-1
-## Developer : Yannyann (https://github.com/a2d8a4v)
-## Website : https://www.yannyann.com
-## License : MIT License
-#########################################################################################################################
-
 function check_sftp_port {
 	# while read -p "@@ Enter port for SFTP which you like: " sftpport; do
     TEST_CADDY_NGINX=$( lower_case ${CADDY_NGINX} )
